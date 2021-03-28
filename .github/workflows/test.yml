@@ -1,0 +1,53 @@
+name: Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Build Target'
+        required: true
+
+env:
+  GitHubMail: ${{ secrets.GitHubMail }}
+  GitHubName: ${{ secrets.GitHubName }}
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  partialTarget: ${{ github.event.inputs.target }}
+  TZ: Asia/Dhaka
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Increase Swap Space
+        run: ./setSwap.sh 13G
+      - name: Cleanup Workspace
+        uses: rokibhasansagar/slimhub_actions@main
+      - name: Setup Git Auth
+        run: ./gitAuth.sh
+      - name: Setup Build Environment
+        run: ./setEnv.sh
+      - name: Sync git-repo For ROM
+        run: ./repoSync.sh
+      - name: Timestamp ccache
+        run: |
+          export stamp=$(date +%Y%m%d.%H%M)
+          echo "timestamp=${stamp}" >> $GITHUB_ENV
+      - run: echo "Timestamp is ${{ env.timestamp }}"
+      - name: compiler cache
+        uses: actions/cache@v2
+        env:
+          cache-name: compiler-cache
+        with:
+          path: /home/runner/.cache/ccache
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ env.timestamp }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Partial Build ${{ env.partialTarget }}
+        run: |
+          echo "Building for ${{ env.partialTarget }}"
+          ./partialBuild.sh ${{ env.partialTarget }}
