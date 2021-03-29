@@ -9,7 +9,7 @@ echo "::group::Lunch for ${partialTarget}"
 lunch aosp_mido-user
 echo "::endgroup::"
 
-rm -rf .repo
+rm -rf .repo 2>/dev/null || true
 
 echo "::group::Disk Space"
 df -hlT
