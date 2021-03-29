@@ -31,20 +31,14 @@ jobs:
         run: ./setEnv.sh
       - name: Sync git-repo For ROM
         run: ./repoSync.sh
-      - name: Timestamp ccache
-        run: |
-          export stamp=$(date +%Y%m%d.%H%M)
-          echo "timestamp=${stamp}" >> $GITHUB_ENV
-      - run: echo "Timestamp is ${{ env.timestamp }}"
       - name: compiler cache
         uses: actions/cache@v2
         env:
           cache-name: compiler-cache
         with:
           path: /home/runner/.cache/ccache
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ env.timestamp }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: Partial Build ${{ env.partialTarget }}
