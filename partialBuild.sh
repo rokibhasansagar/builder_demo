@@ -29,7 +29,7 @@ _ccache_stats 2>/dev/null &
 
 {
   make -j4 ${1} || mmma ${1}
-} || exit 1
+} || true
 kill %1
 echo "::endgroup::"
 

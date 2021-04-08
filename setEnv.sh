@@ -6,7 +6,7 @@ echo "::group::Apt setup"
 sudo apt-fast update -qy
 sudo apt-fast upgrade -qy
 sudo apt-fast install -qy --no-install-recommends --no-install-suggests \
-  lsb-core linux-headers-$(uname -r) python3-dev python-is-python3 xzdec zstd libzstd-dev lib32z1-dev build-essential libc6-dev-i386 gcc-multilib g++-multilib ninja-build clang cmake libxml2-utils xsltproc expat re2c lib32ncurses5-dev bc libreadline-gplv2-dev gawk xterm rename schedtool gperf rclone
+  lsb-core linux-headers-$(uname -r) python3-dev python-is-python3 xzdec zstd libzstd-dev lib32z1-dev build-essential libc6-dev-i386 gcc-multilib g++-multilib ninja-build clang cmake libxml2-utils xsltproc expat re2c lib32ncurses5-dev bc libreadline-gplv2-dev gawk xterm rename schedtool gperf rclone pigz
 sudo apt-get clean -y && sudo apt-get autoremove -y
 sudo rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 echo "::endgroup::"

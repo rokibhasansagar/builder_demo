@@ -11,6 +11,7 @@ env:
   GitHubMail: ${{ secrets.GitHubMail }}
   GitHubName: ${{ secrets.GitHubName }}
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  RClone_Config: ${{ secrets.RClone_Config }}
   partialTarget: ${{ github.event.inputs.target }}
   TZ: Asia/Dhaka
 
@@ -23,25 +24,19 @@ jobs:
         uses: actions/checkout@v2
       - name: Increase Swap Space
         run: ./setSwap.sh 13G
-      - name: Cleanup Workspace
-        uses: rokibhasansagar/slimhub_actions@main
-      - name: Setup Git Auth
+      - name: Setup Git Auth & repo binary
         run: ./gitAuth.sh
+      - name: Cleanup Space
+        run: curl -sL https://github.com/rokibhasansagar/slimhub_actions/raw/main/cleanup.sh | bash
+      - name: Sync git-repo
+        run: ./repoSync.sh
       - name: Setup Build Environment
         run: ./setEnv.sh
-      - name: Sync git-repo For ROM
-        run: ./repoSync.sh
-      - name: compiler cache
-        uses: actions/cache@v2
-        env:
-          cache-name: compiler-cache
-        with:
-          path: /home/runner/.cache/ccache
-          key: ${{ runner.os }}-build-${{ env.cache-name }}
-          restore-keys: |
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+      - name: Get ccache
+        run: ./ccashier.sh download || true
       - name: Partial Build ${{ env.partialTarget }}
         run: |
           echo "Building for ${{ env.partialTarget }}"
           ./partialBuild.sh ${{ env.partialTarget }}
+      - name: Upload ccache
+        run: ./ccashier.sh upload
