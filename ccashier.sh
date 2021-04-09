@@ -5,6 +5,8 @@ ccache_task="${1}"    # upload/download
 
 CCache_URL="https://gdrive.phantomzone.workers.dev/0:/mido_ccache/ccache.tgz"
 
+mkdir -p /home/runner/.cache/ccache /home/runner/.config/rclone
+
 if [[ ${ccache_task} =~ upload ]]; then
   printf "Compressing ccache data...\n"
   ccache -s
