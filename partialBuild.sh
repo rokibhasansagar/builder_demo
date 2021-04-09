@@ -17,12 +17,12 @@ echo "::endgroup::"
 
 echo "::group::Ccache Size before build"
 du -sh ~/.cache/ccache 2>/dev/null || true
-echo ":endgroup::"
+echo "::endgroup::"
 
 echo "::group::Build Process"
 _ccache_stats() {
-  sleep 5m
-  while true; do echo -e "CCACHE_STAT\n"; ccache -s; echo -e "\n"; top -b -i -n 1; sleep 5m; done
+  sleep 10m
+  while true; do echo -e "CCACHE_STAT\n"; ccache -s; echo -e "\n"; top -b -i -n 1; sleep 10m; done
 }
 
 _ccache_stats 2>/dev/null &
@@ -35,6 +35,6 @@ echo "::endgroup::"
 
 echo "::group::Ccache Size before build"
 du -sh ~/.cache/ccache 2>/dev/null || true
-echo ":endgroup::"
+echo "::endgroup::"
 
 exit
