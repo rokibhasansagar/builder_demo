@@ -10,7 +10,6 @@ cd /home/runner/.cache/
 
 if [[ ${ccache_task} =~ upload ]]; then
   printf "Compressing ccache data...\n"
-  ccache -s
   tar -I "pigz -k -3" -cf ccache.tgz ccache
   du -sh ccache.tgz
   printf "Setting up rclone and uploading...\n"
@@ -20,10 +19,8 @@ if [[ ${ccache_task} =~ upload ]]; then
   rm -rf ccache.tgz
 elif [[ ${ccache_task} =~ download ]]; then
   printf "Downloading previous ccache...\n"
-  aria2c -c -x16 -s16 "${CCache_URL}"
+  aria2c -c -x8 -s16 "${CCache_URL}"
   printf "Expanding ccache files...\n"
   tar -I "pigz" -xf ccache.tgz
-  ls -lAog ccache
-  ccache -s
   rm -rf ccache.tgz
 fi
