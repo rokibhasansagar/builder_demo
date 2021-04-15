@@ -35,7 +35,7 @@ jobs:
       - name: Get ccache
         run: ./ccashier.sh download || true
       - name: Partial Build ${{ env.partialTarget }}
-        timeout-minutes: 320
+        timeout-minutes: 270
         run: |
           echo "Building for ${{ env.partialTarget }}"
           ./partialBuild.sh ${{ env.partialTarget }}
